@@ -2,6 +2,7 @@ export const jobs = [
     {
         "company": "Sublime",
         "location": "Miami, Florida - Remote from Argentina",
+        "url": "https://sublime.app/",
         "experiences": [
             {
                 "id": 'col-1',
@@ -29,6 +30,7 @@ export const jobs = [
     {
         "company": "Collective",
         "location": "San Francisco, California - Remote from Argentina",
+        "url": "https://collective.com/",
         "experiences": [
             {
                 "id": 'col-1',
@@ -64,6 +66,7 @@ export const jobs = [
     {
         "company": "Widergy",
         "location": "Buenos Aires, Argentina",
+        "url": "https://widergy.com/",
         "experiences": [
             {
                 "id": 'wid-1',

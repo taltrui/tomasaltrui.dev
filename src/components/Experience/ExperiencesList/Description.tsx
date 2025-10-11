@@ -1,10 +1,13 @@
+import { Button } from "@/components/ui/button";
 import { IconPoint, IconPointFilled } from "@tabler/icons-react";
 
-function Description({ description }: { description: { company: string, location: string, experiences: { id: string, title: string, startDate: string, endDate: string, responsibilities: { id: string, description: string }[] }[], technologies: string[] } }) {
+function Description({ description }: { description: { company: string, url: string, location: string, experiences: { id: string, title: string, startDate: string, endDate: string, responsibilities: { id: string, description: string }[] }[], technologies: string[] } }) {
     return (
         <div className="flex flex-col gap-2">
             <div className="flex flex-col">
-                <h3 className="text-xl font-bold">{description.company}</h3>
+                <Button variant="link" className="p-0 h-0 w-fit h-fit">
+                    <a href={description.url} target="_blank" rel="noopener noreferrer"><h3 className="text-xl font-bold hover:underline">{description.company}</h3></a>
+                </Button>
                 <p className="text-md text-muted-foreground">{description.location}</p>
             </div>
             {description.experiences.map((experience) => (
