@@ -1,6 +1,8 @@
 ---
-import "../styles/global.css";
 import Header from "@/components/Header";
+import "../styles/global.css";
+import { Button } from "@/components/ui/button";
+
 const { content } = Astro.props;
 ---
 
@@ -12,12 +14,20 @@ const { content } = Astro.props;
 		<title>{content.title}</title>
 	</head>
 	<body
-		class="font-mono bg-foreground max-w-screen-md mx-auto text-primary-foreground max-h-screen flex flex-col min-h-screen"
+		class="font-mono bg-foreground max-w-3xl mx-auto text-primary-foreground max-h-screen flex flex-col min-h-screen"
 	>
 		<Header />
 		<div class="p-4 flex flex-col gap-8 mt-6">
 			<slot />
 		</div>
-		<footer class="text-center py-4 mt-auto">made with ❤️ by tomi</footer>
+		<footer class="text-center py-4 mt-auto">
+			<Button variant="link" size="lg"
+				><a
+					href="https://github.com/taltrui/tomasaltrui.dev"
+					target="_blank"
+					rel="noopener noreferrer">made with ❤️ by tomi</a
+				></Button
+			>
+		</footer>
 	</body>
 </html>
