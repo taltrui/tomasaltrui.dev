@@ -1,8 +1,8 @@
 ---
 layout: ../../layouts/blog-post.astro
 title: "TanStack Start + Better Auth - How to"
-description: "A (hope it is) comprehensive guide for building a TanStack Start application with Better Auth, Drizzle ORM, and PostgreSQL"
-date: "2024-12-09"
+description: "A comprehensive guide (I hope) for building a TanStack Start application with Better Auth, Drizzle ORM, and PostgreSQL"
+date: "2025-12-09"
 ---
 
 ## Table of Contents
@@ -16,9 +16,9 @@ date: "2024-12-09"
 
 ## Initial comments
 
-I been trying out Tanstack Start for a while now, I think the dev experience is amazing, it is pretty simple to grasp and it is way less complex overall than Next and Remix.
+I've been trying out Tanstack Start for a while now, I think the dev experience is amazing, it is pretty simple to grasp and it is way less complex overall than Next and Remix.
 
-Since I been tinkering with some integrations: Neon, Convex, Netlify, Cloudflare, Clerk, Supabase, Prisma, and some other I may be forgetting, I though it would be good to write down the stack that worked best for me.
+Since I've been tinkering with some integrations: Neon, Convex, Netlify, Cloudflare, Clerk, Supabase, Prisma, and some other I may be forgetting, I thought it would be good to write down the stack that worked best for me.
 
 What is best for me (maybe it is for you too)? 
 - I'm cheap, so I didn't want to spend too much on MVPs to try out my ideas
@@ -46,7 +46,7 @@ So that being said, bear with me and let's start
 
 ## Project Setup
 
-### 1. First, the first, let's create our project
+### 1. First things first, let's create our project
 
 Folks at TanStack created an awesome step by step setup, so lets use that.
 
@@ -233,7 +233,7 @@ npx @better-auth/cli generate
 ```
 
 
-This will create a `auth-schema.ts` file. My recomendation is that you paste it's content into your `src/db/schema.ts` file, so you have everything in one place.
+This will create a `auth-schema.ts` file. My recommendation is that you paste its content into your `src/db/schema.ts` file, so you have everything in one place.
 
 Then, we create the migration and push it to our local DB:
 
@@ -266,7 +266,7 @@ export const getSessionFn = createServerFn({ method: "GET" }).handler(
 );
 ```
 
-`better-auth` will get the session from the cookies (it is all coming into pieces, right??) and we can use it on the server!
+`better-auth` will get the session from the cookies (it is all coming together, right??) and we can use it on the server!
 
 
 ### 6. Auth middleware (AMAZING!!)
@@ -302,7 +302,7 @@ export const listDogsFn = createServerFn({ method: "GET" })
 			.where(eq(dogs.userId, context.session.user.id))
 			.orderBy(desc(dogs.createdAt));
 
-		return dogs;
+		return allDogs;
 	});
 ```
 
@@ -312,7 +312,7 @@ This (and route auth, that comes later) is also the reason we use a cookie cache
 
 ### 6. Authenticating an user
 
-The official recommendation by the beter-auth team (and mine, of course) is to handle auth flow in the client side. So I'll leave you here a simple version of what I did (without verification emails and social auth).
+The official recommendation by the better-auth team (and mine, of course) is to handle auth flow in the client side. So I'll leave you here a simple version of what I did (without verification emails and social auth).
 
 ```typescript
 export const useSignUp = () => {
@@ -387,7 +387,7 @@ export const useLogout = () => {
 };
 ```
 
-The idea behind using Query's Mutations to handle this is to have a standarized way of handling states and being consistent on how we interact with our services. 
+The idea behind using Query's Mutations to handle this is to have a standardized way of handling states and being consistent on how we interact with our services. 
 
 ## Routing Architecture
 
@@ -429,7 +429,7 @@ Now you can access `context.session` in any route `beforeLoad`
 src/routes/_authed/ - this is where all the authenticated routes lives
 ├── route.jsx - this is where the auth logic lives
 ├── index.jsx - this is "yourdomain.com/"
-├── settings.jsx - this is "yourdomain.con/settings"
+├── settings.jsx - this is "yourdomain.com/settings"
 ```
 
 This is a visual representation of how this works:
