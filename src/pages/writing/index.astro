@@ -1,0 +1,41 @@
+---
+import MainLayout from "@/layouts/main.astro";
+
+const posts = [
+	{
+		slug: "cambio-la-voragine",
+		title: { es: "cambió la vorágine", en: "the frenzy changed" },
+		date: "2026-11-22",
+	},
+];
+
+const sortedPosts = posts.toSorted((a, b) => b.date.localeCompare(a.date));
+
+const formatDate = (date: string, locale: string) =>
+	new Date(`${date}T00:00:00`).toLocaleDateString(locale, {
+		year: "numeric",
+		month: "long",
+		day: "numeric",
+	});
+---
+
+<MainLayout content={{ title: "tomás altrui | escritura" }}>
+	<div class="space-y-6">
+		{
+			sortedPosts.map((post) => (
+				<article class="border-l-2 border-border pl-4 hover:border-foreground transition-colors">
+					<a href={`/writing/${post.slug}`} class="block group">
+						<time class="text-sm text-muted-foreground" datetime={post.date}>
+							<span class="es">{formatDate(post.date, "es-AR")}</span>
+							<span class="en">{formatDate(post.date, "en-US")}</span>
+						</time>
+						<h2 class="text-2xl font-bold mt-1 group-hover:underline underline-offset-4">
+							<span class="es">{post.title.es}</span>
+							<span class="en">{post.title.en}</span>
+						</h2>
+					</a>
+				</article>
+			))
+		}
+	</div>
+</MainLayout>

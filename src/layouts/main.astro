@@ -1,33 +1,101 @@
 ---
-import Header from "@/components/Header";
-import "../styles/global.css";
-import { Button } from "@/components/ui/button";
+import { ClientRouter } from "astro:transitions";
+import "@/styles/global.css";
 
-const { content } = Astro.props;
+interface Props {
+	content: { title: string };
+	centered?: boolean;
+}
+
+const { content, centered = false } = Astro.props;
+const link = "underline-offset-4 hover:underline";
+
+const sections = [
+	{ href: "/", es: "sobre mi", en: "about" },
+	{ href: "/fotografia", es: "fotografia", en: "photography" },
+	{ href: "/writing", es: "escritura", en: "writing" },
+];
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+	href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`);
 ---
 
-<html lang="en">
+<html lang="es" transition:animate="none">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.png" />
 		<title>{content.title}</title>
+		<script is:inline>
+			(() => {
+				const root = document.documentElement;
+				const apply = () => {
+					const lang = localStorage.getItem("lang") === "en" ? "en" : "es";
+					root.lang = lang;
+					root.dataset.lang = lang;
+					root.classList.toggle("dark", localStorage.getItem("theme") === "dark");
+				};
+				apply();
+				document.addEventListener("astro:after-swap", apply);
+				document.addEventListener("click", (event) => {
+					const target = event.target instanceof Element ? event.target : null;
+					const langButton = target?.closest("[data-set-lang]");
+					if (langButton) {
+						localStorage.setItem("lang", langButton.getAttribute("data-set-lang"));
+						apply();
+					} else if (target?.closest("[data-toggle-theme]")) {
+						localStorage.setItem("theme", root.classList.contains("dark") ? "light" : "dark");
+						apply();
+					}
+				});
+			})();
+		</script>
+		<ClientRouter />
 	</head>
-	<body
-		class="font-mono bg-foreground max-w-3xl mx-auto text-primary-foreground max-h-screen flex flex-col min-h-screen"
-	>
-		<Header />
-		<div class="p-4 flex flex-col gap-8 mt-6">
+	<body class="min-h-screen flex flex-col gap-8 p-8 font-sans text-[16px] leading-relaxed">
+		<header class="flex items-center justify-between gap-4">
+			<nav>
+				{
+					sections.map((s, i) => (
+						<>
+							{i > 0 && <span class="mx-2">|</span>}
+							<a
+								class:list={[link, isActive(s.href) && "underline"]}
+								href={s.href}
+								aria-current={isActive(s.href) ? "page" : undefined}
+							>
+								<span class="es">{s.es}</span>
+								<span class="en">{s.en}</span>
+							</a>
+						</>
+					))
+				}
+			</nav>
+			<div class="flex items-center gap-4">
+				<div>
+					<button type="button" class={`${link} lang-option cursor-pointer`} data-set-lang="en">en</button>
+					<span>/</span>
+					<button type="button" class={`${link} lang-option cursor-pointer`} data-set-lang="es">es</button>
+				</div>
+				<button type="button" class="cursor-pointer" data-toggle-theme aria-label="cambiar tema">
+					<svg class="block dark:hidden" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+					<svg class="hidden dark:block" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+				</button>
+			</div>
+		</header>
+		<main
+			class:list={["flex-1 max-w-2xl flex flex-col gap-4", centered && "justify-center"]}
+			transition:name="content"
+			transition:animate="fade"
+		>
 			<slot />
-		</div>
-		<footer class="text-center py-4 mt-auto">
-			<Button variant="link" size="lg"
-				><a
-					href="https://github.com/taltrui/tomasaltrui.dev"
-					target="_blank"
-					rel="noopener noreferrer">made with ❤️ by tomi</a
-				></Button
-			>
+		</main>
+		<footer>
+			<a class="underline underline-offset-4" href="https://github.com/taltrui" target="_blank" rel="noopener noreferrer">github</a>
+			<span class="mx-2">|</span>
+			<a class="underline underline-offset-4" href="https://www.linkedin.com/in/tomas-altrui/" target="_blank" rel="noopener noreferrer">linkedin</a>
+			<span class="mx-2">|</span>
+			<a class="underline underline-offset-4" href="mailto:hello@tomasaltrui.dev">contact</a>
 		</footer>
 	</body>
 </html>

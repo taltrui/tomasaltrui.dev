@@ -3,42 +3,33 @@ import MainLayout from "@/layouts/main.astro";
 
 interface Props {
 	content: {
-		title: string;
-		date?: string;
-		description?: string;
+		title: { es: string; en: string };
+		date: string;
 	};
 }
 
-const { content } = Astro.props;
-const { title, date, description } = content;
+const { title, date } = Astro.props.content;
 
-// Format date if provided
-const formattedDate = date
-	? new Date(date).toLocaleDateString("en-US", {
-			year: "numeric",
-			month: "long",
-			day: "numeric",
-		})
-	: undefined;
+const formatDate = (locale: string) =>
+	new Date(`${date}T00:00:00`).toLocaleDateString(locale, {
+		year: "numeric",
+		month: "long",
+		day: "numeric",
+	});
 ---
 
-<MainLayout content={{ title: `${title} | blog` }}>
-	<article class="prose prose-invert max-w-none">
+<MainLayout content={{ title: `${title.es} | tomás altrui` }}>
+	<article class="max-w-none">
 		<header class="mb-8">
-			<a href="/blog" class="text-secondary hover:underline text-sm mb-4 inline-block"
-				>← back to blog</a
-			>
-			<h1 class="text-4xl font-bold mb-2">{title}</h1>
-			{
-				formattedDate && (
-					<time class="text-muted-foreground text-sm">{formattedDate}</time>
-				)
-			}
-			{
-				description && (
-					<p class="text-lg text-muted-foreground mt-2">{description}</p>
-				)
-			}
+			<a href="/writing" class="hover:underline underline-offset-4 text-sm mb-4 inline-block">
+				<span class="es">← volver a escritura</span><span class="en">← back to writing</span>
+			</a>
+			<h1 class="text-4xl font-bold mb-2">
+				<span class="es">{title.es}</span><span class="en">{title.en}</span>
+			</h1>
+			<time class="text-muted-foreground text-sm" datetime={date}>
+				<span class="es">{formatDate("es-AR")}</span><span class="en">{formatDate("en-US")}</span>
+			</time>
 		</header>
 		<div class="blog-content">
 			<slot />
@@ -74,8 +65,9 @@ const formattedDate = date
 	}
 
 	.blog-content a {
-		color: var(--color-secondary);
+		color: inherit;
 		text-decoration: underline;
+		text-underline-offset: 4px;
 	}
 
 	.blog-content a:hover {
@@ -94,7 +86,7 @@ const formattedDate = date
 
 	.blog-content code {
 		background-color: var(--color-muted);
-		color: var(--color-black);
+		color: inherit;
 		padding: 0.125rem 0.375rem;
 		border-radius: 0.25rem;
 		font-size: 0.875rem;
@@ -115,7 +107,7 @@ const formattedDate = date
 	}
 
 	.blog-content blockquote {
-		border-left: 4px solid var(--color-secondary);
+		border-left: 4px solid var(--color-border);
 		padding-left: 1rem;
 		font-style: italic;
 		margin: 1rem 0;
