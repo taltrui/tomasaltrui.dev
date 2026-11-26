@@ -1,0 +1,33 @@
+---
+import MainLayout from "@/layouts/main.astro";
+
+const link = "underline underline-offset-4";
+const external = { target: "_blank", rel: "noopener noreferrer" };
+---
+
+<MainLayout lang="es" title="tomás altrui" centered>
+	<p>
+		hola, me llamo tomás y soy ingeniero de producto con más de 10 años de
+		experiencia.
+	</p>
+	<p>
+		desarrolle desde cero apps web y mobile que usan cientos de miles de
+		personas, herramientas internas, esquemas de releases, implementación de
+		CI/DI, fui mentor y lidere el equipo de desarrollo mobile en <a class={link} href="https://widergy.com/" {...external}>widergy</a>.
+	</p>
+	<p>
+		en <a class={link} href="https://collective.com/" {...external}>collective</a> fui parte del equipo de onboarding y del equipo que realizó
+		la integración con zendesk, también cree herramientas internas con IA para
+		el seguimiento y manejo de nuevos usuarios y customer service.
+	</p>
+	<p>
+		hoy en <a class={link} href="https://sublime.app/" {...external}>sublime</a> me encargo de mantener, mejorar y evolucionar todo lo que
+		tenga que ver con el front: web, apps, extensión, infra, CI/CD, stores,
+		arquitectura y más. además de la parte técnica tengo un fuerte aporte a
+		nivel producto y diseño.
+	</p>
+	<p>
+		fuera del trabajo, estoy intentando escribir <a class={link} href="/es/writing">algunas de mis ideas y
+		pensamientos</a> y adentrándome en la <a class={link} href="/es/photography">fotografía</a>.
+	</p>
+</MainLayout>

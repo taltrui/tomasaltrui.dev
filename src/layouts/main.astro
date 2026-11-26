@@ -1,49 +1,58 @@
 ---
 import { ClientRouter } from "astro:transitions";
+import { type Lang, langs, localize, unlocalize } from "@/lib/i18n";
 import "@/styles/global.css";
 
 interface Props {
-	content: { title: string };
+	lang: Lang;
+	title: string;
+	description?: string;
+	type?: "website" | "article";
 	centered?: boolean;
 }
 
-const { content, centered = false } = Astro.props;
+const { lang, title, description, type = "website", centered = false } = Astro.props;
 const link = "underline-offset-4 hover:underline";
 
 const sections = [
-	{ href: "/", es: "sobre mi", en: "about" },
-	{ href: "/fotografia", es: "fotografia", en: "photography" },
-	{ href: "/writing", es: "escritura", en: "writing" },
+	{ path: "/", en: "about", es: "sobre mi" },
+	{ path: "/photography", en: "photography", es: "fotografia" },
+	{ path: "/writing", en: "writing", es: "escritura" },
 ];
-const path = Astro.url.pathname;
-const isActive = (href: string) =>
-	href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`);
+// Same page without the language prefix, e.g. "/writing/foo" for both /writing/foo and /es/writing/foo.
+const path = unlocalize(Astro.url.pathname);
+const isActive = (sectionPath: string) =>
+	sectionPath === "/" ? path === "/" : path === sectionPath || path.startsWith(`${sectionPath}/`);
+const absolute = (url: string) => new URL(url, Astro.site).href;
 ---
 
-<html lang="es" transition:animate="none">
+<html lang={lang} transition:animate="none">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.png" />
-		<title>{content.title}</title>
+		<title>{title}</title>
+		<meta name="author" content="Tomás Altrui" />
+		{description && <meta name="description" content={description} />}
+		<link rel="canonical" href={absolute(localize(lang, path))} />
+		{langs.map((l) => <link rel="alternate" hreflang={l} href={absolute(localize(l, path))} />)}
+		<link rel="alternate" hreflang="x-default" href={absolute(localize("en", path))} />
+		<meta property="og:title" content={title} />
+		{description && <meta property="og:description" content={description} />}
+		<meta property="og:type" content={type} />
+		<meta property="og:url" content={absolute(localize(lang, path))} />
+		<meta property="og:site_name" content="tomás altrui" />
+		<meta property="og:locale" content={lang === "en" ? "en_US" : "es_AR"} />
+		<slot name="head" />
 		<script is:inline>
 			(() => {
 				const root = document.documentElement;
-				const apply = () => {
-					const lang = localStorage.getItem("lang") === "en" ? "en" : "es";
-					root.lang = lang;
-					root.dataset.lang = lang;
-					root.classList.toggle("dark", localStorage.getItem("theme") === "dark");
-				};
+				const apply = () => root.classList.toggle("dark", localStorage.getItem("theme") === "dark");
 				apply();
 				document.addEventListener("astro:after-swap", apply);
 				document.addEventListener("click", (event) => {
 					const target = event.target instanceof Element ? event.target : null;
-					const langButton = target?.closest("[data-set-lang]");
-					if (langButton) {
-						localStorage.setItem("lang", langButton.getAttribute("data-set-lang"));
-						apply();
-					} else if (target?.closest("[data-toggle-theme]")) {
+					if (target?.closest("[data-toggle-theme]")) {
 						localStorage.setItem("theme", root.classList.contains("dark") ? "light" : "dark");
 						apply();
 					}
@@ -60,12 +69,11 @@ const isActive = (href: string) =>
 						<>
 							{i > 0 && <span class="mx-2">|</span>}
 							<a
-								class:list={[link, isActive(s.href) && "underline"]}
-								href={s.href}
-								aria-current={isActive(s.href) ? "page" : undefined}
+								class:list={[link, isActive(s.path) && "underline"]}
+								href={localize(lang, s.path)}
+								aria-current={isActive(s.path) ? "page" : undefined}
 							>
-								<span class="es">{s.es}</span>
-								<span class="en">{s.en}</span>
+								{s[lang]}
 							</a>
 						</>
 					))
@@ -73,11 +81,27 @@ const isActive = (href: string) =>
 			</nav>
 			<div class="flex items-center gap-4">
 				<div>
-					<button type="button" class={`${link} lang-option cursor-pointer`} data-set-lang="en">en</button>
-					<span>/</span>
-					<button type="button" class={`${link} lang-option cursor-pointer`} data-set-lang="es">es</button>
+					{langs.map((l, i) => (
+						<>
+							{i > 0 && <span>/</span>}
+							<a
+								class:list={[link, l === lang && "underline"]}
+								href={localize(l, path)}
+								hreflang={l}
+								lang={l}
+								aria-current={l === lang ? "true" : undefined}
+							>
+								{l}
+							</a>
+						</>
+					))}
 				</div>
-				<button type="button" class="cursor-pointer" data-toggle-theme aria-label="cambiar tema">
+				<button
+					type="button"
+					class="cursor-pointer"
+					data-toggle-theme
+					aria-label={lang === "en" ? "toggle theme" : "cambiar tema"}
+				>
 					<svg class="block dark:hidden" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
 					<svg class="hidden dark:block" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
 				</button>

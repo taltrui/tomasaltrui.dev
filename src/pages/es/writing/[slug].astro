@@ -1,0 +1,12 @@
+---
+import BlogPostLayout from "@/layouts/blog-post.astro";
+import { getPosts, type Post } from "@/lib/writing";
+
+export async function getStaticPaths() {
+	return (await getPosts("es")).map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props as { post: Post };
+---
+
+<BlogPostLayout lang="es" post={post} />

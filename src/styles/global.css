@@ -39,12 +39,3 @@
   }
 }
 
-html:not([data-lang="en"]) .en,
-html[data-lang="en"] .es {
-  display: none;
-}
-
-html:not([data-lang="en"]) .lang-option[data-set-lang="es"],
-html[data-lang="en"] .lang-option[data-set-lang="en"] {
-  text-decoration-line: underline;
-}
