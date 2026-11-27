@@ -1,6 +1,7 @@
 ---
 title: "the frenzy changed"
 date: "2026-11-22"
+translationKey: "voragine"
 ---
 
 *notes: the article was originally written in spanish, some of the ideas of the article may get a bit lost when translated, mainly the meaning of the word "vorágine" which I don't feel it has a direct translation in english, but basically is the everyday work frenzy and craziness that you can find in a lot of tech startups.*

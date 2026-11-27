@@ -21,7 +21,8 @@ pnpm preview      # Preview production build
 - `src/layouts/main.astro` - Base layout: head metadata (title, author, canonical, hreflang alternates, og:*), top nav (about | photography | writing), language links (en/es), theme toggle (sun/moon), content area, footer links (github | linkedin | contact). Uses Astro's `ClientRouter` for fade transitions on the content area only.
 - `src/layouts/blog-post.astro` - Article layout (title, date, rendered Markdown, article meta + JSON-LD) wrapping `MainLayout`.
 - `src/components/WritingList.astro` - Article list, shared by both languages.
-- `src/content/writing/<lang>/<slug>.md` - Articles (frontmatter: `title`, `date` as quoted `"YYYY-MM-DD"`, optional `description`). Collection defined in `src/content.config.ts`; helpers in `src/lib/writing.ts`.
+- `src/content/writing/<lang>/<slug>.md` - Articles. The file name is the URL slug and can differ per language. Frontmatter: `title`, `date` as quoted `"YYYY-MM-DD"`, `translationKey` (same value in both language versions, links them), optional `description`. Collection defined in `src/content.config.ts`; helpers in `src/lib/writing.ts`.
+- `public/_redirects` - Netlify redirects for renamed URLs.
 - `src/pages/` - English routes: `/`, `/photography`, `/writing`, `/writing/[slug]`.
 - `src/pages/es/` - Same routes in Spanish: `/es/`, `/es/photography`, `/es/writing`, `/es/writing/[slug]`.
 - `src/lib/i18n.ts` - `Lang`, `localize(lang, path)`, `unlocalize(pathname)`, `formatDate`.
@@ -35,11 +36,11 @@ pnpm preview      # Preview production build
 </MainLayout>
 ```
 
-`centered` vertically centers the content between nav and footer. Optional `description` and `type` ("website" | "article") feed the meta tags.
+`centered` vertically centers the content between nav and footer. Optional `description` and `type` ("website" | "article") feed the meta tags. `paths` gives the page's unprefixed path per language when it differs (articles); by default the other language uses the same path.
 
 ## Language (en/es)
 
-Every page exists once per language and contains only that language, so crawlers and link previews see a single language. English is the default and lives at the root; Spanish lives under `/es`. Build internal links with `localize(lang, path)`. The en/es toggle links to the same path in the other language, so every page and article needs both versions (same slug in `en/` and `es/`).
+Every page exists once per language and contains only that language, so crawlers and link previews see a single language. English is the default and lives at the root; Spanish lives under `/es`. Build internal links with `localize(lang, path)`. The en/es toggle links to the same page in the other language, so every page and article needs both versions; the build fails if an article has no counterpart with the same `translationKey`.
 
 ## Theme
 

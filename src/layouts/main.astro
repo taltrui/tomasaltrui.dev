@@ -9,6 +9,8 @@ interface Props {
 	description?: string;
 	type?: "website" | "article";
 	centered?: boolean;
+	/** Unprefixed path of this page in each language, when it differs per language (e.g. article slugs). */
+	paths?: Record<Lang, string>;
 }
 
 const { lang, title, description, type = "website", centered = false } = Astro.props;
@@ -21,6 +23,7 @@ const sections = [
 ];
 // Same page without the language prefix, e.g. "/writing/foo" for both /writing/foo and /es/writing/foo.
 const path = unlocalize(Astro.url.pathname);
+const paths = Astro.props.paths ?? { en: path, es: path };
 const isActive = (sectionPath: string) =>
 	sectionPath === "/" ? path === "/" : path === sectionPath || path.startsWith(`${sectionPath}/`);
 const absolute = (url: string) => new URL(url, Astro.site).href;
@@ -35,8 +38,8 @@ const absolute = (url: string) => new URL(url, Astro.site).href;
 		<meta name="author" content="Tomás Altrui" />
 		{description && <meta name="description" content={description} />}
 		<link rel="canonical" href={absolute(localize(lang, path))} />
-		{langs.map((l) => <link rel="alternate" hreflang={l} href={absolute(localize(l, path))} />)}
-		<link rel="alternate" hreflang="x-default" href={absolute(localize("en", path))} />
+		{langs.map((l) => <link rel="alternate" hreflang={l} href={absolute(localize(l, paths[l]))} />)}
+		<link rel="alternate" hreflang="x-default" href={absolute(localize("en", paths.en))} />
 		<meta property="og:title" content={title} />
 		{description && <meta property="og:description" content={description} />}
 		<meta property="og:type" content={type} />
@@ -86,7 +89,7 @@ const absolute = (url: string) => new URL(url, Astro.site).href;
 							{i > 0 && <span>/</span>}
 							<a
 								class:list={[link, l === lang && "underline"]}
-								href={localize(l, path)}
+								href={localize(l, paths[l])}
 								hreflang={l}
 								lang={l}
 								aria-current={l === lang ? "true" : undefined}

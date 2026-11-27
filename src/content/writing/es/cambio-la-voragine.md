@@ -1,6 +1,7 @@
 ---
 title: "cambió la vorágine"
 date: "2026-11-22"
+translationKey: "voragine"
 ---
 
 “Antes todo era mejor” es algo que se suele escuchar, especialmente de padres y abuelos. “La música antes era mejor, hoy es todo lo mismo”. En parte creo que tienen razón, en parte creo que hay cierta nostalgia que recuerda épocas pasadas con mejores ojos de lo que realmente fueron. Un juego de hace 20 años que tu yo de 10 años podría estar 12 horas seguidas jugando, pero ahora tenés 30 y no lo soportás más de 20 minutos. Crecer hace que cambien muchas cosas. Gustos, amistades, familia, pensamientos, opiniones. El mundo cambia, los trabajos cambian. Vivimos en una constante necesidad de adaptarnos, y el que no se adapta, normalmente perece de alguna manera u otra. Es cruel, sí, pero el mundo no para. No para por vos, no para por mí. Sin embargo, la nostalgia nos da esa sensación de que antes estábamos mejor, o al menos el mundo era mejor; en todo este cambio imparable, siempre, algún antes, era mejor.
